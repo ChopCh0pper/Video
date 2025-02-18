@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">VK_Task</string>
+    <string name="duration">Продолжительность: %s</string>
 </resources>
