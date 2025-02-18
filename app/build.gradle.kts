@@ -45,4 +45,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation (libs.androidx.lifecycle.viewmodel.ktx)
+    implementation (libs.androidx.lifecycle.livedata.ktx)
+    implementation (libs.koin.android)
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    implementation (libs.exoplayer)
+    implementation (libs.androidx.swiperefreshlayout)
 }
