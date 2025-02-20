@@ -1,9 +1,7 @@
 package com.example.vk_task.data.repository
 
 import com.example.vk_task.data.api.VideoApiService
-import com.example.vk_task.data.model.Video
 import com.example.vk_task.data.model.VideoHit
-import com.google.android.exoplayer2.util.Log
 
 class VideoRepository(
     private val videoApiService: VideoApiService

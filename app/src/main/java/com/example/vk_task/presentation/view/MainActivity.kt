@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         observeViewModel()
         setupListeners()
-        viewModel.loadVideoList()
     }
 
     private fun setupRecyclerView() {

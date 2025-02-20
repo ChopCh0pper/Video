@@ -50,11 +50,13 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.exoplayer.dash)
+    implementation(libs.androidx.media3.ui)
     implementation (libs.squareup.picasso)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
     implementation (libs.androidx.lifecycle.livedata.ktx)
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
-    implementation (libs.exoplayer)
     implementation (libs.androidx.swiperefreshlayout)
 }

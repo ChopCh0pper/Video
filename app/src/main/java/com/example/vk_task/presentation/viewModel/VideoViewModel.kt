@@ -16,6 +16,9 @@ class VideoViewModel: ViewModel() {
 
     private val videoRepository = VideoRepository(RetrofitClient.videoApiService)
 
+    init {
+        loadVideoList()
+    }
 
     fun loadVideoList() {
         viewModelScope.launch {
