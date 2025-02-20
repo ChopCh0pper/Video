@@ -6,4 +6,9 @@
     </style>
 
     <style name="Theme.VK_Task" parent="Base.Theme.VK_Task" />
+
+    <style name="croppedCornerImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
 </resources>
