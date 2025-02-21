@@ -5,11 +5,6 @@ import androidx.lifecycle.ViewModel
 
 class VideoPlayerViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    companion object {
-        private const val KEY_POSITION = "playback_position"
-        private const val KEY_PLAY_WHEN_READY = "play_when_ready"
-    }
-
     var playbackPosition: Long
         get() = savedStateHandle[KEY_POSITION] ?: 0L
         set(value) {
@@ -21,4 +16,9 @@ class VideoPlayerViewModel(private val savedStateHandle: SavedStateHandle) : Vie
         set(value) {
             savedStateHandle[KEY_PLAY_WHEN_READY] = value
         }
+
+    companion object {
+        private const val KEY_POSITION = "playback_position"
+        private const val KEY_PLAY_WHEN_READY = "play_when_ready"
+    }
 }

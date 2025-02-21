@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class VideoViewModel: ViewModel() {
+class VideoViewModel(
+    private val videoRepository: VideoRepository
+): ViewModel() {
 
     private val _state = MutableStateFlow<VideoListState>(VideoListState.Loading)
     val state = _state.asStateFlow()
-
-    private val videoRepository = VideoRepository(RetrofitClient.videoApiService)
 
     init {
         loadVideoList()

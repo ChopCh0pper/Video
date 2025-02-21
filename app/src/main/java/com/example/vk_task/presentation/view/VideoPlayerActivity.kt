@@ -2,20 +2,18 @@ package com.example.vk_task.presentation.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import com.example.vk_task.databinding.ActivityVideoPlayerBinding
 import com.example.vk_task.presentation.viewModel.VideoPlayerViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class VideoPlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityVideoPlayerBinding
     private var exoPlayer: ExoPlayer? = null
 
-    private val viewModel by lazy {
-        ViewModelProvider(this)[VideoPlayerViewModel::class.java]
-    }
+    private val viewModel: VideoPlayerViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
