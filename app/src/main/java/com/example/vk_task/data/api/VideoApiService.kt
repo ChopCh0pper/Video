@@ -13,5 +13,5 @@ interface VideoApiService {
         @Query("key") key: String = "48938892-e56853779c76b397d48f48ba1",
         @Query("per_page") perPage: Int = 40,
         @Query("category") category: String
-    ): VideoResponse
+    ): Response<VideoResponse>
 }

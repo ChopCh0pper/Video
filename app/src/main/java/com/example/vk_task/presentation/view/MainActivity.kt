@@ -1,12 +1,17 @@
 package com.example.vk_task.presentation.view
 
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.vk_task.R
+import com.example.vk_task.data.model.VideoHit
 import com.example.vk_task.databinding.ActivityMainBinding
 import com.example.vk_task.presentation.adapter.VideoAdapter
 import com.example.vk_task.presentation.state.VideoListState
@@ -14,6 +19,8 @@ import com.example.vk_task.presentation.viewModel.VideoViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import retrofit2.HttpException
+import java.io.IOException
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,12 +36,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupRecyclerView()
-        observeViewModel()
         setupListeners()
+        observeViewModel()
     }
 
     private fun setupRecyclerView() {
-        videoAdapter = VideoAdapter { videoUrl ->  onVideoSelectedForViewing(videoUrl)}
+        videoAdapter = VideoAdapter { videoUrl -> onVideoSelectedForViewing(videoUrl) }
         binding.videoRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = videoAdapter
@@ -48,33 +55,62 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-
         lifecycleScope.launch {
-            viewModel.state.collectLatest {
-                repeatOnLifecycle(Lifecycle.State.RESUMED) {
-
-                    when(it) {
-
-                        is VideoListState.Loading -> {
-                            binding.swipeRefreshLayout.isRefreshing = true
-                        }
-
-                        is VideoListState.Content -> {
-                            binding.swipeRefreshLayout.isRefreshing = false
-                            videoAdapter.submitList(it.currentList)
-                        }
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.state.collectLatest { state ->
+                    when (state) {
+                        is VideoListState.Loading -> handleLoadingState()
+                        is VideoListState.Content -> handleContentState(state.currentList)
+                        is VideoListState.Error -> handleErrorState(state.e)
                     }
                 }
             }
-
         }
     }
 
-    private fun onVideoSelectedForViewing(videoUrl: String) {
+    private fun handleLoadingState() {
+        binding.swipeRefreshLayout.isRefreshing = true
+    }
 
-        val intent = Intent(this, VideoPlayerActivity::class.java)
-        intent.putExtra(EXTRA_KEY, videoUrl)
-        startActivity(intent)
+    private fun handleContentState(videoList: List<VideoHit>) {
+        binding.swipeRefreshLayout.isRefreshing = false
+        binding.imgError.visibility = View.GONE
+        binding.tvMsgError.visibility = View.GONE
+        videoAdapter.submitList(videoList)
+    }
+
+    private fun handleErrorState(error: Throwable) {
+        binding.swipeRefreshLayout.isRefreshing = false
+        binding.imgError.visibility = View.VISIBLE
+        binding.tvMsgError.visibility = View.VISIBLE
+        videoAdapter.submitList(emptyList())
+
+        val errorMessage = when (error) {
+            is IOException -> getString(R.string.io_exception_error)
+            is HttpException -> getString(R.string.http_exception_error)
+            else -> getString(R.string.unknown_error)
+        }
+        binding.tvMsgError.text = errorMessage
+    }
+
+    private fun onVideoSelectedForViewing(videoUrl: String) {
+        if (isNetworkAvailable()) {
+            val intent = Intent(this, VideoPlayerActivity::class.java)
+            intent.putExtra(EXTRA_KEY, videoUrl)
+            startActivity(intent)
+        } else {
+            showToast(getString(R.string.io_exception_error))
+        }
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetworkInfo
+        return activeNetwork != null && activeNetwork.isConnected
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     companion object {

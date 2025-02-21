@@ -1,7 +1,10 @@
 package com.example.vk_task.data.repository
 
 import com.example.vk_task.data.api.VideoApiService
+import com.example.vk_task.data.model.ResponseResult
 import com.example.vk_task.data.model.VideoHit
+import retrofit2.HttpException
+import java.io.IOException
 
 class VideoRepository(
     private val videoApiService: VideoApiService
@@ -15,9 +18,24 @@ class VideoRepository(
         "business", "music"
     )
 
-    suspend fun getVideos(): List<VideoHit> {
-        val category = generateCategory()
-        return videoApiService.getVideos(category = category).hits
+    suspend fun getVideos(): ResponseResult<List<VideoHit>> {
+        return try {
+            val category = generateCategory()
+            val response = videoApiService.getVideos(category = category)
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    ResponseResult.Success(body.hits)
+                } else {
+                    ResponseResult.Error(NullPointerException())
+                }
+            } else {
+                ResponseResult.Error(HttpException(response))
+            }
+        } catch (e: Exception) {
+            ResponseResult.Error(e)
+        }
     }
 
     // Этот метод сделан для того, чтобы

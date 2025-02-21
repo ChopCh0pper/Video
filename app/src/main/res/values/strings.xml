@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">VK_Task</string>
-    <string name="duration">Продолжительность: %s</string>
+    <string name="duration">Продолжительность: %s сек.</string>
+    <string name="http_exception_error">Возникли проблемы, попробуйте позже.</string>
+    <string name="io_exception_error">Проверьте соединение с интернетом или попробуйте включить VPN</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
 </resources>

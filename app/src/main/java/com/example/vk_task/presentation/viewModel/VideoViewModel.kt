@@ -2,7 +2,7 @@ package com.example.vk_task.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vk_task.data.api.RetrofitClient
+import com.example.vk_task.data.model.ResponseResult
 import com.example.vk_task.data.repository.VideoRepository
 import com.example.vk_task.presentation.state.VideoListState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,8 +23,16 @@ class VideoViewModel(
     fun loadVideoList() {
         viewModelScope.launch {
             _state.value = VideoListState.Loading
-            val currentList = videoRepository.getVideos()
-            _state.value = VideoListState.Content(currentList)
+            when(val responseResult = videoRepository.getVideos()) {
+
+                is ResponseResult.Success -> {
+                    _state.value = VideoListState.Content(responseResult.data)
+                }
+
+                is ResponseResult.Error -> {
+                    _state.value = VideoListState.Error(responseResult.e)
+                }
+            }
         }
     }
 }
