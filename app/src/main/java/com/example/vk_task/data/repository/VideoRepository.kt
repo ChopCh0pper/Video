@@ -4,7 +4,6 @@ import com.example.vk_task.data.api.VideoApiService
 import com.example.vk_task.data.model.ResponseResult
 import com.example.vk_task.data.model.VideoHit
 import retrofit2.HttpException
-import java.io.IOException
 
 class VideoRepository(
     private val videoApiService: VideoApiService
