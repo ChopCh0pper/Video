@@ -85,12 +85,11 @@ class MainActivity : AppCompatActivity() {
         binding.tvMsgError.visibility = View.VISIBLE
         videoAdapter.submitList(emptyList())
 
-        val errorMessage = when (error) {
+        binding.tvMsgError.text = when (error) {
             is IOException -> getString(R.string.io_exception_error)
             is HttpException -> getString(R.string.http_exception_error)
             else -> getString(R.string.unknown_error)
         }
-        binding.tvMsgError.text = errorMessage
     }
 
     private fun onVideoSelectedForViewing(videoUrl: String) {

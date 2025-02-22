@@ -1,9 +1,11 @@
 package com.example.vk_task.presentation.view
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
+import com.example.vk_task.R
 import com.example.vk_task.databinding.ActivityVideoPlayerBinding
 import com.example.vk_task.presentation.viewModel.VideoPlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,12 +30,15 @@ class VideoPlayerActivity : AppCompatActivity() {
         binding.playerView.player = exoPlayer
 
         val videoUri = intent.getStringExtra(MainActivity.EXTRA_KEY)
-        val mediaItem = MediaItem.fromUri(videoUri!!)
-
-        exoPlayer?.setMediaItem(mediaItem)
-        exoPlayer?.playWhenReady = viewModel.playWhenReady
-        exoPlayer?.seekTo(viewModel.playbackPosition)
-        exoPlayer?.prepare()
+        if (videoUri != null) {
+            val mediaItem = MediaItem.fromUri(videoUri)
+            exoPlayer?.setMediaItem(mediaItem)
+            exoPlayer?.playWhenReady = viewModel.playWhenReady
+            exoPlayer?.seekTo(viewModel.playbackPosition)
+            exoPlayer?.prepare()
+        } else {
+            showError(getString(R.string.video_url_not_found))
+        }
     }
 
     override fun onPause() {
@@ -51,5 +56,10 @@ class VideoPlayerActivity : AppCompatActivity() {
         if (exoPlayer == null) {
             initializePlayer()
         }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        finish()
     }
 }
